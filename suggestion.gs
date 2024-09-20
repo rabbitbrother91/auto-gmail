@@ -3,7 +3,7 @@ var recipientArray;
 function sendEmailToArrayOfRecipients() {
   // Get the stored index of the last sent email
   var properties = PropertiesService.getScriptProperties();
-  recipientArray = JSON.parse(properties.getProperty("dists"));
+  var recipientArray = JSON.parse(properties.getProperty("dists"));
 
   // Initialize lastIndex to -1 if it hasn't been set yet
   var lastIndex = parseInt(properties.getProperty("lastIndex"));
@@ -26,8 +26,9 @@ function sendEmailToArrayOfRecipients() {
     return; // Exit the function
   }
 
-  // Generate Subject
   var emailaddress = recipientArray[nextIndex][1]; // Get the next recipient
+
+  // Get email subject
   var subject = getSubject();
 
   // Generate Message
@@ -52,7 +53,7 @@ function sendEmailToArrayOfRecipients() {
       var thread = threads[0];
 
       // Get or create a label
-      var labelName = "Collaboration-Github"; // Change this to your desired label name
+      var labelName = "Collaboration-Appstore"; // Change this to your desired label name
       var label =
         GmailApp.getUserLabelByName(labelName) ||
         GmailApp.createLabel(labelName);
@@ -66,24 +67,18 @@ function sendEmailToArrayOfRecipients() {
 }
 
 function getSubject() {
-  return `Proposal for a Win-Win Collaboration (Via GitHub)`;
+  return `Proposal for Professional Collaboration(In Google Appstore)`;
 }
 
 function getMessage(name) {
   return `
-    <p>Hello ${name},</p>
+    <p>Hello ${name}</p>
     
-    <p>I hope this message finds you well. My name is James and I am a Full Stack Developer with more than 3 years of work experience. I am currently exploring task opportunities that not only provide financial growth but also valuable professional relationships.</p>
+    <p>I saw your profile on Github. We are in the process of updating our website with a new design, which you can view here: <a href="https://www.figma.com/design/XKP1pwZdIdPGxMXLo6Yts5/AutoSquare.su?node-id=452-7274">Figma Design</a>. We are seeking a skilled software engineer to assist us with this endeavor.</p>
     
-    <p>Today, I checked out your GitHub profile and saw that you are the CEO, so I was impressed and believe there may be potential for collaboration and work. I can help you with my personality and skills, further integrity. If you're facing challenges or planning to enhance the quality of your work, I would appreciate the opportunity to collaborate with you.</p>
+    <p>We have access to the current project of our website, and you are welcome to review it to determine whether to update the existing framework or initiate a new development project.</p>
     
-    <p>For reliability, I can work on your project for free while I adapt. After assessing my personality and skills, I believe I can continue working on your project within your budget. In simple terms, if you give me tasks, I will complete them for you within your budget and timeline.</p>
-    
-    <p>Would you be available for a conversation at your convenience? I would appreciate the opportunity to discuss how we might work together in a mutually beneficial manner. I was just inquiring. Even if you say you are not interested, I'm not disappointed. I enjoy discovering better results; it makes more sense to me.</p>
-    
-    <p>I would appreciate it if you could stay in touch with me as you plan to expand your development business. It was simply my suggestion to collaborate.</p>
-    
-    <p>Thanks for your consideration,<br>James Jones</p>
+    <p>If this opportunity aligns with your expertise and interests, please feel free to reach out.</p>
   `;
 }
 
