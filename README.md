@@ -1,3 +1,3 @@
 # auto-gmail
 Auto Gmail Management CodeSpace
-- Runtime : script.google.com
+- Runtime : [Google App Script](https://script.google.com)
