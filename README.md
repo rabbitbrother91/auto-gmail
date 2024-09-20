@@ -1,2 +1,3 @@
 # auto-gmail
-Auto Gmail Management Tool
+Auto Gmail Management CodeSpace
+- Runtime : script.google.com
