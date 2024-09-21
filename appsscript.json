@@ -1,12 +1,14 @@
 {
-    "timeZone": "Asia/Shanghai",
-    "dependencies": {
-     },
-     "oauthScopes": [
-      "https://www.googleapis.com/auth/script.scriptapp",
-      "https://www.googleapis.com/auth/spreadsheets",
-      "https://www.googleapis.com/auth/gmail.send"
-     ],
-    "exceptionLogging": "STACKDRIVER",
-    "runtimeVersion": "V8"
-  }
+  "timeZone": "Asia/Hong_Kong",
+  "dependencies": {},
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/script.scriptapp",
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/gmail.send",
+    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/gmail.modify",
+    "https://mail.google.com/"
+  ],
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8"
+}
