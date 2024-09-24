@@ -71,16 +71,18 @@ function getSubject() {
 
 function getMessage(company) {
   return `
-        <div style="font-family: Arial, sans-serif; font-size: 14px; color: black;">
-            <p><strong>Dear ${company} Team,</strong></p>
-            <p>I hope this message finds you in great spirits. My name is James, and I am a Full Stack and Mobile Game Developer with over 3 years of work experience, specializing in JavaScript and C#.</p>
-            <p>I recently explored your games and visited your website, and I must say, I was thoroughly impressed. Your creativity and dedication to game development truly shine through.</p>
-            <p>I believe that an engaging and efficient website is crucial for promoting your games, especially with the unique customization features you offer. Imagine having a dynamic platform that not only showcases your games but also enhances your brand presence and engages your audience effectively.</p>
-            <p>I would love the opportunity to discuss how I can contribute to optimizing your website for better promotion and user interaction. If this sounds interesting to you, please let me know, and we can arrange a time to chat.</p>
-            <p>Thank you for your time, and I look forward to the possibility of working together.</p>
-            <p><strong>Best regards,</strong><br><strong>James Jones</strong></p>
-        </div>
-    `;
+    <p>Hello ${name},</p>
+    
+    <p>I hope this message finds you well. My name is James, and I am a Full Stack Developer with over three years of experience. I recently came across your GitHub profile and was impressed by your work.</p>
+    
+    <p>I see potential for collaboration on projects that could enhance your business. I would be happy to offer my skills and support, especially if you are encountering any challenges.</p>
+    
+    <p>If you're open to it, I would appreciate the opportunity for a brief conversation to explore how we might work together. I can adjust my schedule to fit yours.</p>
+    
+    <p>Thank you for your time, and I look forward to hearing from you.</p>
+    
+    <p>Best regards,<br>James Jones</p>
+  `;
 }
 
 function stopTrigger() {
