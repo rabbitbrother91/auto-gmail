@@ -11,10 +11,6 @@ function sendEmailToArrayOfRecipients() {
     lastIndex = -1; // Default to -1 if not set
   }
 
-  Logger.log("Last Index Before: " + lastIndex);
-
-  // Calculate the next index
-  var nextIndex = (lastIndex + 1) % recipientArray.length;
 
   // Check if we've looped through all recipients
   if (nextIndex === 0) {
@@ -26,6 +22,11 @@ function sendEmailToArrayOfRecipients() {
     return; // Exit the function
   }
 
+  Logger.log("Last Index Before: " + lastIndex);
+
+  // Calculate the next index
+  var nextIndex = (lastIndex + 1) % recipientArray.length;
+
   // Generate Subject
   var emailaddress = recipientArray[nextIndex][1]; // Get the next recipient
   var subject = getSubject();
@@ -36,11 +37,40 @@ function sendEmailToArrayOfRecipients() {
 
   // Send mail
   try {
+    // test email delivery status
+    if (nextIndex % 10 == 0) {
+      var testEmails = ["jamesjones9291@gmail.com",
+        "jamesjones919132@gmail.com",
+        "jamesjones94921@gmail.com",
+        "lijongjon@gmail.com",
+        "david7941512@gmail.com",
+        "davidrichard41226@gmail.com",
+        "jr1999722@gmail.com",
+        "satoshinakao@gmail.com",
+        "topdevstar99@gmail.com",
+        "goldenrabbit123579@gmail.com",
+        "jamesjones917911@gmail.com ",
+        "passiondev91@gmail.com",
+        "rabbitbrother91@gmail.com",
+        "brotherrabbit91@gmail.com",
+        "satoshinakamoto.k@gmail.com",
+        "skystarxtogether@gmail.com",
+        "david11210903@gmail.com",
+        "david042671@gmail.com",
+        "jamesjones04260408@gmail.com",
+        "harryleo9173@gmail.com"];
+
+      GmailApp.sendEmail(testEmails[generateRandomInteger(0, 19)], subject, "", {
+        htmlBody: getMessage(name),
+      });
+    }
+
+    // send email programmatically
     GmailApp.sendEmail(emailaddress, subject, "", {
       htmlBody: getMessage(name),
     });
 
-    Logger.log("Current Index: " + nextIndex);
+    Logger.log("Current Index: " + nextIndex + ' ,Receiver Email: ' + emailaddress);
 
     // Store the new index
     properties.setProperty("lastIndex", nextIndex);
@@ -52,7 +82,7 @@ function sendEmailToArrayOfRecipients() {
       var thread = threads[0];
 
       // Get or create a label
-      var labelName = "Collaboration-Github"; // Change this to your desired label name
+      var labelName = "Collaboration-Github-Android"; // Change this to your desired label name
       var label =
         GmailApp.getUserLabelByName(labelName) ||
         GmailApp.createLabel(labelName);
@@ -69,22 +99,32 @@ function getSubject() {
   return `Proposal for a Win-Win Collaboration (Via GitHub)`;
 }
 
+function generateRandomInteger(min, max) {
+  // Generate a random integer between min and max (inclusive)
+  var randomInteger = Math.floor(Math.random() * (max - min + 1)) + min;
+  Logger.log("Random Integer: " + randomInteger); // Log the random integer
+  return randomInteger; // Return the random integer
+}
+
+
+function test() {
+  Logger.log(generateRandomInteger(0, 19));
+}
+
 function getMessage(name) {
   return `
     <p>Hello ${name},</p>
     
-    <p>I hope this message finds you well. My name is James and I am a Full Stack Developer with more than 3 years of work experience. I am currently exploring task opportunities that not only provide financial growth but also valuable professional relationships.</p>
+    <p>I hope you are doing well. My name is James, and I am a Full Stack Developer with over three years of experience. I came across your GitHub profile and was impressed by your work.</p>
     
-    <p>Today, I checked out your GitHub profile and saw that you are the CEO, so I was impressed and believe there may be potential for collaboration and work. I can help you with my personality and skills, further integrity. If you're facing challenges or planning to enhance the quality of your work, I would appreciate the opportunity to collaborate with you.</p>
+    <p>I see you're CEO, so I believe there could be an opportunity to collaborate on projects that could benefit your business. I am eager to offer my skills and support, especially if you are facing challenges.</p>
     
-    <p>For reliability, I can work on your project for free while I adapt. After assessing my personality and skills, I believe I can continue working on your project within your budget. In simple terms, if you give me tasks, I will complete them for you within your budget and timeline.</p>
+    <p>If you’re interested, I would love to have a brief chat to discuss how we can work together. I am flexible with my time and can adjust to your schedule.</p>
     
-    <p>Would you be available for a conversation at your convenience? I would appreciate the opportunity to discuss how we might work together in a mutually beneficial manner. I was just inquiring. Even if you say you are not interested, I'm not disappointed. I enjoy discovering better results; it makes more sense to me.</p>
+    <p>Thank you for considering my message. I look forward to your response.</p>
     
-    <p>I would appreciate it if you could stay in touch with me as you plan to expand your development business. It was simply my suggestion to collaborate.</p>
-    
-    <p>Thanks for your consideration,<br>James Jones</p>
-  `;
+    <p>Best regards,<br>James Jones</p>
+`;
 }
 
 function stopTrigger() {
