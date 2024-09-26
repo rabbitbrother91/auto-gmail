@@ -11,7 +11,6 @@ function sendEmailToArrayOfRecipients() {
     lastIndex = -1; // Default to -1 if not set
   }
 
-
   // Check if we've looped through all recipients
   if (nextIndex === 0) {
     Logger.log("All recipients have been contacted.Stopping further emails.");
@@ -39,7 +38,8 @@ function sendEmailToArrayOfRecipients() {
   try {
     // test email delivery status
     if (nextIndex % 10 == 0) {
-      var testEmails = ["jamesjones9291@gmail.com",
+      var testEmails = [
+        "jamesjones9291@gmail.com",
         "jamesjones919132@gmail.com",
         "jamesjones94921@gmail.com",
         "lijongjon@gmail.com",
@@ -58,11 +58,17 @@ function sendEmailToArrayOfRecipients() {
         "david11210903@gmail.com",
         "david042671@gmail.com",
         "jamesjones04260408@gmail.com",
-        "harryleo9173@gmail.com"];
+        "harryleo9173@gmail.com",
+      ];
 
-      GmailApp.sendEmail(testEmails[generateRandomInteger(0, 19)], subject, "", {
-        htmlBody: getMessage(name),
-      });
+      GmailApp.sendEmail(
+        testEmails[generateRandomInteger(0, 19)],
+        subject,
+        "",
+        {
+          htmlBody: getMessage(name),
+        }
+      );
     }
 
     // send email programmatically
@@ -70,7 +76,9 @@ function sendEmailToArrayOfRecipients() {
       htmlBody: getMessage(name),
     });
 
-    Logger.log("Current Index: " + nextIndex + ' ,Receiver Email: ' + emailaddress);
+    Logger.log(
+      "Current Index: " + nextIndex + " ,Receiver Email: " + emailaddress
+    );
 
     // Store the new index
     properties.setProperty("lastIndex", nextIndex);
@@ -96,7 +104,7 @@ function sendEmailToArrayOfRecipients() {
 }
 
 function getSubject() {
-  return `Proposal for a Win-Win Collaboration (Via GitHub)`;
+  return `Proposal for a Win-Win Collaboration In GitHub`;
 }
 
 function generateRandomInteger(min, max) {
@@ -106,7 +114,6 @@ function generateRandomInteger(min, max) {
   return randomInteger; // Return the random integer
 }
 
-
 function test() {
   Logger.log(generateRandomInteger(0, 19));
 }
@@ -115,13 +122,11 @@ function getMessage(name) {
   return `
     <p>Hello ${name},</p>
     
-    <p>I hope you are doing well. My name is James, and I am a Full Stack Developer with over three years of experience. I came across your GitHub profile and was impressed by your work.</p>
+    <p>My name is James, and I am a Android Developer with over three years of experience. I came across your GitHub profile and see you are Android Developer</p>
     
-    <p>I see you're CEO, so I believe there could be an opportunity to collaborate on projects that could benefit your business. I am eager to offer my skills and support, especially if you are facing challenges.</p>
+    <p>I believe there could be an opportunity to collaborate on projects that could benefit your business. I am eager to offer my skills and support</p>
     
-    <p>If you’re interested, I would love to have a brief chat to discuss how we can work together. I am flexible with my time and can adjust to your schedule.</p>
-    
-    <p>Thank you for considering my message. I look forward to your response.</p>
+    <p>If you’re interested, I can work on your project for free while I adapt. Thank you. I look forward to your response.</p>
     
     <p>Best regards,<br>James Jones</p>
 `;

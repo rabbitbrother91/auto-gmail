@@ -34,14 +34,9 @@ function useGoogleSheet() {
 
   // Get values from the range
   var values = range.getValues();
-  values[values.length] = ["Passion", "passiondev91@gmail.com"];
   Logger.log("Length: " + values.length);
 
   var properties = PropertiesService.getScriptProperties();
   properties.setProperty("dists", JSON.stringify(values));
   return values;
-  // Log the values to the console
-  for (var i = 0; i < values.length; i++) {
-    Logger.log(values[i]);
-  }
 }
