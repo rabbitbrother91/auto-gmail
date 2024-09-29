@@ -68,9 +68,9 @@ function getMessageTemplate(tags) {
   if (matchingIndex !== -1) {
     Logger.log(
       "Index of item matching all tags '" +
-      tags.join(", ") +
-      "': " +
-      matchingIndex
+        tags.join(", ") +
+        "': " +
+        matchingIndex
     );
     return mail_templates[matchingIndex];
   } else {
@@ -159,11 +159,16 @@ function sendMyEmail() {
   }
 
   try {
-    GmailApp.sendEmail(receiver.email, subject, '', options);
+    GmailApp.sendEmail(receiver.email, subject, "", options);
 
     // Store the new index
     properties.setProperty("lastIndex", lastIndex + 1);
-    Logger.log("Last Index After: " + properties.getProperty("lastIndex"));
+    Logger.log(
+      "Last Index After: " +
+        properties.getProperty("lastIndex") +
+        "/" +
+        receivers.length
+    );
 
     insertTags(receiver.email, tags);
 
@@ -175,7 +180,6 @@ function sendMyEmail() {
       "git",
     ]);
     Logger.log("Sent to " + receiver.email);
-
   } catch (error) {
     Logger.log(error);
     insertLog([
