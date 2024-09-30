@@ -4,19 +4,21 @@
 var account_ss_id = "148DSZ_QvizBYK09jAqmFYcZ-4kgr41NSUeDu6J9Fs5I";
 var contact_ss_id = "1YcVGy2oqHOWxOezIFfWduPYQyHARQ09ZWkyYGDKt9ec";
 var mail_ss_id = "1dSR5IgbVjGUVamqDO3UgAbjUdj8E-E0QQ8Dkj66UtAI";
-var github_ss_id = "1ampRcVGr-ZUrSYSjZ7fAaMWh6jpj0enrVDYCCSt5RFA";
-var import_ss_id = github_ss_id;
+var github_ss_id = `1ampRcVGr-ZUrSYSjZ7fAaMWh6jpj0enrVDYCCSt5RFA`;
+var task_ss_id = `15zhFUXcxzEjiwNrvtdvEPWtyJRdPtm9ynCtNPRVziWI`;
+var task_sheet_name = "mail";
 
-var sender = {
-  first_name: "Satoshi",
-  last_name: "Nakamoto",
-  name: "Satoshi Nakamoto",
-  email: "satoshinakamoto.k@gmail.com",
-};
-
+var sender;
 var receivers = [];
-var lastIndex = 0;
+
 var properties;
+var lastIndex = -1;
+var inited = -1;
+
+var task;
+class Mail {
+  send() {}
+}
 // Get valid email addresses from account spreadsheet, ss_id = 148DSZ_QvizBYK09jAqmFYcZ-4kgr41NSUeDu6J9Fs5I
 function getMyEmails() {
   var sheet = SpreadsheetApp.openById(account_ss_id).getSheetByName("User");
@@ -53,6 +55,10 @@ function getMyEmails() {
   return validEmails;
 }
 
+function getMyPrimaryEmail() {
+  Logger.log(Session.getActiveUser().getEmail());
+}
+
 function getMessageTemplate(tags) {
   var mail_templates = getKeyValueDataById(mail_ss_id, "template");
 
@@ -78,43 +84,58 @@ function getMessageTemplate(tags) {
   }
 }
 
-function getKeyValueData(sheet) {
-  // Get all values from the sheet
-  var data = sheet.getDataRange().getValues();
-
-  var keys = data[0]; // First row as keys
-  var result = [];
-
-  // Loop through the data starting from the second row (index 1)
-  for (var i = 1; i < data.length; i++) {
-    var item = {};
-    for (var j = 0; j < sheet.getLastColumn(); j++) {
-      item[keys[j]] = data[i][j]; // Assign each value to the corresponding key
-    }
-    result.push(item); // Add the item to the result array
-  }
-
-  // Log the result object
-  // Logger.log("Result: " + JSON.stringify(result, null, 2)); // Pretty print the result with indentation
-
-  return result;
+function deInit() {
+  properties.setProperty("inited", -1);
+  properties.setProperty("lastIndex", -1);
 }
 
-function getKeyValueDataById(ss_id, sheetName) {
-  var sheet = SpreadsheetApp.openById(ss_id).getSheetByName(sheetName); // Replace 'User' with your sheet name
-  return getKeyValueData(sheet);
-}
-
-function initPref() {
+function init() {
   properties = PropertiesService.getScriptProperties();
+  inited = parseInt(properties.getProperty("inited"));
+
   // Initialize lastIndex to -1 if it hasn't been set yet
   lastIndex = parseInt(properties.getProperty("lastIndex"));
   if (isNaN(lastIndex)) {
     lastIndex = 0; // Default to -1 if not set
   }
+
+  initTask();
+  initSender();
+  initReceivers();
+
+  properties.setProperty("inited", 1);
+  inited = 1;
 }
 
-function validate() {
+function initTask() {
+  this.task = getTask();
+}
+
+function getTask() {
+  var tasks = getKeyValueDataById(task_ss_id, task_sheet_name);
+  var task = tasks.find(
+    (t) => t.account === Session.getActiveUser().getEmail()
+  );
+  return task;
+}
+
+function update() {}
+
+function initSender() {
+  this.sender = getSender();
+}
+
+function getSender() {
+  var sender = {
+    first_name: "James",
+    last_name: "Johnson",
+    name: "James Johnson",
+    email: Session.getActiveUser().getEmail(),
+  };
+
+  return sender;
+}
+function isInvalid() {
   // Check if we've looped through all recipients
   if (lastIndex + 1 >= receivers.length) {
     Logger.log("All recipients have been contacted.Stopping further emails.");
@@ -122,22 +143,25 @@ function validate() {
     // stopTrigger();
     // Reset the index
     // properties.setProperty("lastIndex", 0);
-    return; // Exit the function
+    return false; // Exit the function
   }
-}
-function sendMyEmail() {
-  getUser();
-  initPref();
-  validate();
 
-  receiver = receivers[lastIndex];
+  return true;
+}
+
+function sendMyEmail() {
+  init();
+
+  if (!isInvalid()) return;
+
+  var receiver = receivers[lastIndex];
   var tags = ["Collaboration", "Github"];
 
   var message_template = getMessageTemplate(tags);
   var subject = message_template.subject;
   var message = message_template.message_html.replace(
     /\${pronoun}/g,
-    receiver.name
+    receiver.firstName
   );
   message = message.replace(/\${firstName}/g, sender.first_name);
   message = message.replace(/\${Name}/g, sender.name);
@@ -148,7 +172,7 @@ function sendMyEmail() {
     name: sender.name,
   };
 
-  if (lastIndex % 12 == 0) {
+  if (lastIndex % 20 == 0) {
     var testEmails = getMyEmails();
     GmailApp.sendEmail(
       testEmails[generateRandomInteger(0, testEmails.length - 1)],
@@ -163,12 +187,7 @@ function sendMyEmail() {
 
     // Store the new index
     properties.setProperty("lastIndex", lastIndex + 1);
-    Logger.log(
-      "Last Index After: " +
-        properties.getProperty("lastIndex") +
-        "/" +
-        receivers.length
-    );
+    Logger.log("Last Index After: " + properties.getProperty("lastIndex"));
 
     insertTags(receiver.email, tags);
 
@@ -210,6 +229,7 @@ function insertTags(email, tags) {
     }
   }
 }
+
 function insertLog(log) {
   var sheet = SpreadsheetApp.openById(mail_ss_id).getSheetByName("log");
   sheet.insertRowAfter(sheet.getLastRow());
@@ -218,19 +238,18 @@ function insertLog(log) {
   range.setValues([log]);
 }
 
-function getUser() {
-  // // id, user_id, from_email, to_email, send_date, send_status, type, reply
-  // var sheet = SpreadsheetApp.openById(mail_ss_id).getSheetByName('log')
+function initReceivers() {
+  this.receivers = getReceivers();
+}
 
-  // var sent_emails = sheet.getRange(2, 2, sheet.getLastRow()).getValues().map(function (row) {
-  //   return row[0];
-  // });
+function getReceivers() {
+  if (task === null) return;
 
-  // Logger.log(sent_emails[0])
-
-  // id, name, location, email, github
-  var sheet = SpreadsheetApp.openById(import_ss_id).getSheetByName("users");
+  var sheet = SpreadsheetApp.openById(task.sheet_id).getSheetByName(
+    task.sheet_name
+  );
   var values = getDeafultData(sheet);
+  var receivers = [];
   for (var i = 0; i < values.length; i++) {
     var receiver = {};
     receiver.name = values[i][0];
@@ -239,16 +258,12 @@ function getUser() {
 
     receivers.push(receiver);
   }
-  // var to_emails = emails.filter(function (e) {
-  //   return !sent_emails.includes(e);
-  // });
-
-  // sendMyEmail(to_emails[0])
+  return receivers;
 }
-
 function getDeafultData(sheet) {
   return sheet.getRange("A2:B" + sheet.getLastRow()).getValues();
 }
+
 function getCurrentTimeGMTPlus9() {
   // Create a new Date object for the current time
   var date = new Date();

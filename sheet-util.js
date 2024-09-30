@@ -1,3 +1,31 @@
+function getKeyValueData(sheet) {
+  // Get all values from the sheet
+  var data = sheet.getDataRange().getValues();
+
+  var keys = data[0]; // First row as keys
+  var result = [];
+
+  // Loop through the data starting from the second row (index 1)
+  for (var i = 1; i < data.length; i++) {
+    var item = {};
+    for (var j = 0; j < sheet.getLastColumn(); j++) {
+      item[keys[j]] = data[i][j]; // Assign each value to the corresponding key
+    }
+    result.push(item); // Add the item to the result array
+  }
+
+  // Log the result object
+  // Logger.log("Result: " + JSON.stringify(result, null, 2)); // Pretty print the result with indentation
+
+  return result;
+}
+
+// Get key-value arrays from sheet by ss_id and sheet_name
+function getKeyValueDataById(ss_id, sheet_name) {
+  var sheet = SpreadsheetApp.openById(ss_id).getSheetByName(sheet_name); // Replace 'User' with your sheet name
+  return getKeyValueData(sheet);
+}
+
 // temp code
 function importCSVFromURL() {
   var url =
