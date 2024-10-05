@@ -19,6 +19,7 @@ var task;
 class Mail {
   send() {}
 }
+
 // Get valid email addresses from account spreadsheet, ss_id = 148DSZ_QvizBYK09jAqmFYcZ-4kgr41NSUeDu6J9Fs5I
 function getMyEmails() {
   var sheet = SpreadsheetApp.openById(account_ss_id).getSheetByName("User");
@@ -159,6 +160,7 @@ function sendMyEmail() {
 
   var message_template = getMessageTemplate(tags);
   var subject = message_template.subject;
+
   var message = message_template.message_html.replace(
     /\${pronoun}/g,
     receiver.firstName
@@ -170,17 +172,10 @@ function sendMyEmail() {
     htmlBody: message,
     from: sender.email,
     name: sender.name,
+    subject: subject,
   };
 
-  if (lastIndex % 20 == 0) {
-    var testEmails = getMyEmails();
-    GmailApp.sendEmail(
-      testEmails[generateRandomInteger(0, testEmails.length - 1)],
-      subject,
-      "",
-      options
-    );
-  }
+  testEmail(options);
 
   try {
     GmailApp.sendEmail(receiver.email, subject, "", options);
@@ -211,6 +206,17 @@ function sendMyEmail() {
     Logger.log("Not sent to " + receiver.email);
   }
   Logger.log("Sent Successfully");
+}
+
+function testEmail(subject, options) {
+  if (lastIndex % 20 == 0) {
+    var testEmails = getMyEmails();
+    GmailApp.sendEmail(
+      testEmails[generateRandomInteger(0, testEmails.length - 1)],
+      "",
+      options
+    );
+  }
 }
 
 function insertTags(email, tags) {
